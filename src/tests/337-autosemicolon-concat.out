@@ -2,12 +2,12 @@
 //passes:AutoSemicolon
 
 echo '' .
-implode(
-	",\n",
-	array_map(
-		function ($k, $v) {
-			return '`' . $k . '` = ' . $db->quote($v);
-		}, array_keys($row), $row
+	implode(
+		",\n",
+		array_map(
+			function ($k, $v) {
+				return '`' . $k . '` = ' . $db->quote($v);
+			}, array_keys($row), $row
+		)
 	)
-)
-. '';
+	. '';
