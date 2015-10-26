@@ -1,8 +1,9 @@
 <?php
 if (ini_get('phar.readonly')) {
 	unset($argv[0]);
-	passthru($_SERVER['_'] . ' -dphar.readonly=0 build.php ' . implode(' ', $argv) . ' 2>&1');
-	exit(0);
+	$ret = 0;
+	passthru($_SERVER['_'] . ' -dphar.readonly=0 build.php ' . implode(' ', $argv) . ' 2>&1', $ret);
+	exit($ret);
 }
 require 'vendor/dericofilho/csp/csp.php';
 require 'Core/constants.php';
@@ -30,13 +31,6 @@ if (!empty($newver)) {
 }
 
 class Build extends FormatterPass {
-	private $suffix = [];
-
-	public function __construct($suffix) {
-		$this->suffix = explode(',', $suffix);
-		$this->suffix[] = '';
-	}
-
 	public function candidate($source, $foundTokens) {
 		return true;
 	}
@@ -79,9 +73,6 @@ class Build extends FormatterPass {
 			case T_REQUIRE:
 				list($id, $text) = $this->walkUntil(T_CONSTANT_ENCAPSED_STRING);
 				$fn = str_replace(['"', "'"], '', $text);
-				if (!empty($suffix)) {
-					$fn = str_replace('.php', '_' . $suffix . '.php', $fn);
-				}
 
 				$source = file_get_contents(str_replace(['"', "'"], '', $fn));
 				$source = (new EncapsulateNamespaces())->format($source);
@@ -107,8 +98,7 @@ class Build extends FormatterPass {
 	}
 }
 
-$suffix = &$opt['suffix'];
-$pass = new Build($suffix);
+$pass = new Build();
 
 $chn = make_channel();
 $chn_done = make_channel();

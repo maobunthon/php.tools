@@ -2461,7 +2461,7 @@ final class Cache implements Cacher {
 
 	}
 
-	define("VERSION", "16.1.0");
+	define('VERSION', '16.1.0');
 	
 function extractFromArgv($argv, $item) {
 	return array_values(
@@ -3228,6 +3228,12 @@ abstract class FormatterPass {
 		} while ($expectedId != $tkns[$ptr][0]);
 	}
 
+	protected function refWalkUsefulUntilReverse($tkns, &$ptr, $expectedId) {
+		do {
+			$ptr = $this->walkLeft($tkns, $ptr, $this->ignoreFutileTokens);
+		} while ($ptr >= 0 && $expectedId != $tkns[$ptr][0]);
+	}
+
 	protected function render($tkns = null) {
 		if (null == $tkns) {
 			$tkns = $this->tkns;
@@ -3561,14 +3567,6 @@ abstract class FormatterPass {
  * @codeCoverageIgnore
  */
 abstract class BaseCodeFormatter {
-	private $hasAfterExecutedPass = false;
-
-	private $hasAfterFormat = false;
-
-	private $hasBeforeFormat = false;
-
-	private $hasBeforePass = false;
-
 	protected $passes = [
 		'StripSpaces' => false,
 		'ExtractMethods' => false,
@@ -3694,6 +3692,14 @@ abstract class BaseCodeFormatter {
 		'AutoSemicolon' => false,
 		'PSR1OpenTags' => false,
 	];
+
+	private $hasAfterExecutedPass = false;
+
+	private $hasAfterFormat = false;
+
+	private $hasBeforeFormat = false;
+
+	private $hasBeforePass = false;
 
 	private $shortcircuit = [
 		'ReindentAndAlignObjOps' => 'ReindentObjOps',
@@ -4084,7 +4090,6 @@ final class CodeFormatter extends BaseCodeFormatter {
 	}
 
 	public function disablePass($pass) {}
-
 	public function enablePass($pass) {}
 }
 
