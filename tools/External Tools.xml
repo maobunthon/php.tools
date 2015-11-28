@@ -2,7 +2,7 @@
   <tool name="phpfmt" description="Run php.tools on the file" showInMainMenu="true" showInEditor="true" showInProject="true" showInSearchPopup="true" disabled="false" useConsole="true" showConsoleOnStdOut="false" showConsoleOnStdErr="false" synchronizeAfterRun="true">
     <exec>
       <option name="COMMAND" value="/Applications/MAMP/bin/php/php5.6.10/bin/php" />
-      <option name="PARAMETERS" value="/maobunthon/.composer/vendor/bin/fmt.php --no-backup &quot;$FileDir$/$FileName$&quot;" />
+      <option name="PARAMETERS" value="$USER_HOME$/.composer/vendor/bin/fmt.php --no-backup &quot;$FileDir$/$FileName$&quot;" />
       <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
     </exec>
   </tool>
